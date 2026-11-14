@@ -1,5 +1,5 @@
 package com.flatmate.controller;
 
-public class AdminController {
+public class ProfileController {
     
 }
