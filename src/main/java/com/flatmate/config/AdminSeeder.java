@@ -1,5 +1,6 @@
-package com.flatmate.config;
+Package com.flatmate.config;
 
-public class AdminSeeder {
-    
-}
+import com.flatmate.model.User;
+import com.flatmate.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springfram
