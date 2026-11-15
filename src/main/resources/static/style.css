@@ -18,7 +18,7 @@ input, select, textarea { width: 100%; padding: 8px; border: 1px solid #b8bfc8; 
 input[type="checkbox"] { width: auto; }
 input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px solid #1b6ec2; outline-offset: 1px; }
 
-button { padding: 8px 14px; border: 1px solid #1b6ec2; background: #1b6ec2; color: #fff; border-radius: 4px; font: inherit; cursor: pointer; margin: 8px 6px 0 0; }
+button { padding: 8px 14px; border: 1px solid #1b6fc2d4; background: #1b6ec2; color: #fff; border-radius: 4px; font: inherit; cursor: pointer; margin: 8px 6px 0 0; }
 button.secondary { background: #fff; color: #1b6ec2; }
 button.danger { background: #fff; color: #b3261e; border-color: #b3261e; }
 button.link { background: none; border: none; color: #1b6ec2; margin: 0; padding: 6px 8px; }
