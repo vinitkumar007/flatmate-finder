@@ -1,3 +1,8 @@
+com\flatmate\controller\AuthController.class
+com\flatmate\dto\RegisterRequest.class
 com\flatmate\repository\UserRepository.class
 com\flatmate\FlatmateApplication.class
 com\flatmate\model\User.class
+com\flatmate\exception\GlobalExceptionHandler.class
+com\flatmate\service\AuthService.class
+com\flatmate\config\AppConfig.class
