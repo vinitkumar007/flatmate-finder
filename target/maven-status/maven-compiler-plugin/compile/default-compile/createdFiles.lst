@@ -1,1 +1,3 @@
+com\flatmate\repository\UserRepository.class
 com\flatmate\FlatmateApplication.class
+com\flatmate\model\User.class
