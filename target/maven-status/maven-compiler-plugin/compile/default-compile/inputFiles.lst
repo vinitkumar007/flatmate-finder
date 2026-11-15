@@ -1,8 +1,11 @@
 C:\Users\vinit\Desktop\flatmate-finder\src\main\java\com\flatmate\config\AppConfig.java
 C:\Users\vinit\Desktop\flatmate-finder\src\main\java\com\flatmate\controller\AuthController.java
 C:\Users\vinit\Desktop\flatmate-finder\src\main\java\com\flatmate\dto\RegisterRequest.java
+C:\Users\vinit\Desktop\flatmate-finder\src\main\java\com\flatmate\dto\VerifyRequest.java
+C:\Users\vinit\Desktop\flatmate-finder\src\main\java\com\flatmate\exception\ApiException.java
 C:\Users\vinit\Desktop\flatmate-finder\src\main\java\com\flatmate\exception\GlobalExceptionHandler.java
 C:\Users\vinit\Desktop\flatmate-finder\src\main\java\com\flatmate\FlatmateApplication.java
 C:\Users\vinit\Desktop\flatmate-finder\src\main\java\com\flatmate\model\User.java
 C:\Users\vinit\Desktop\flatmate-finder\src\main\java\com\flatmate\repository\UserRepository.java
 C:\Users\vinit\Desktop\flatmate-finder\src\main\java\com\flatmate\service\AuthService.java
+C:\Users\vinit\Desktop\flatmate-finder\src\main\java\com\flatmate\service\OtpSender.java

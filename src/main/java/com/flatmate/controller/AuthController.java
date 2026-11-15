@@ -1,5 +1,6 @@
 package com.flatmate.controller;
 
+import com.flatmate.dto.VerifyRequest;
 import com.flatmate.dto.RegisterRequest;
 import com.flatmate.service.AuthService;
 import jakarta.validation.Valid;
@@ -23,6 +24,11 @@ public class AuthController {
     @PostMapping("/register")
     public Map<String, String> register(@Valid @RequestBody RegisterRequest r) {
         auth.register(r.email(), r.password());
-        return Map.of("message", "Account ban gaya");
+        return Map.of("message", "Agar email sahi hai to OTP bhaj diya gaya hai ");
+    }
+    @PostMapping("/verify")
+    public Map<String, String> verify(@Valid @RequestBody VerifyRequest r) {
+        auth.verify(r.email(), r.otp());
+        return Map.of("message", "Email verify ho gaya");
     }
 }

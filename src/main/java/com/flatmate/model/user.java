@@ -1,8 +1,11 @@
 package com.flatmate.model;
 
+import java.time.Instant;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.time.Instant;
 
 @Entity
 @Table(name = "users")
@@ -19,4 +22,9 @@ public class User {
 
     @Column(nullable = false)
     private String passwordHash;
+        private boolean verified;
+
+    private String otpHash;
+    private Instant otpExpiry;
+    private int otpTries;
 }
