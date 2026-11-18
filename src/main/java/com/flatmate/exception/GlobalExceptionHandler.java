@@ -18,7 +18,8 @@ public class GlobalExceptionHandler {
                 .orElse("Invalid input");
         return ResponseEntity.badRequest().body(Map.of("error", msg));
     }
-        @ExceptionHandler(ApiException.class)
+
+    @ExceptionHandler(ApiException.class)
     public ResponseEntity<Map<String, String>> handleApi(ApiException e) {
         return ResponseEntity.status(e.getStatus()).body(Map.of("error", e.getMessage()));
     }
