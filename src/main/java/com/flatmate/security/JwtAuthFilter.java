@@ -2,13 +2,15 @@ package com.flatemate.security;
 
 import com.flatmate.model.User;
 import com.flatmate.repository.UserRepository;
+import com.flatmate.service.JwtService;
+
 import io.jsonwebtoken.Claim;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-public class JwtAuthFilter extnds OnceperRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter {
     private final JetService jwt;
     private final UserRepository users;
 
@@ -28,8 +30,8 @@ public class JwtAuthFilter extnds OnceperRequestFilter {
     }
 
     @Override 
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
-    throw ServletException, IOException {
+        protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+            throws ServletException, IOException {
 
         string header = req.getHeader("Authorizat");
 
@@ -43,7 +45,7 @@ public class JwtAuthFilter extnds OnceperRequestFilter {
                     var auth =new UsernamePasswordAuthenticationToken(
                         new AuthUser(u.gitId(), u.getRole()),
                         null,
-                        List.of(new SimpleGrantedAuthority("ROLE_" + u.getRole()));
+                                                    List.of(new SimpleGrantedAuthority("ROLE_" + u.getRole())));
                         SecurityContextHolder.getContext().setAuthentication(Auth);
                     }
 
