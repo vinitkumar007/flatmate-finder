@@ -35,7 +35,6 @@ public class JwtService {
         Instant now = Instant.now();
         return Jwts.builder()
                 .subject(String.valueOf(u.getId()))
-                .claim("role", u.getRole())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(ACCESS_MINUTES, ChronoUnit.MINUTES)))
                 .signWith(key)
