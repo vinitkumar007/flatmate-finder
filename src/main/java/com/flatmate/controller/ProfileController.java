@@ -1,7 +1,6 @@
 package com.flatmate.controller;
 
 import com.flatmate.dto.ProfileRequest;
-import com.flatmate.model.Profile;
 import com.flatmate.security.AuthUser;
 import com.flatmate.service.ProfileService;
 import jakarta.validation.Valid;
@@ -23,12 +22,12 @@ public class ProfileController {
     }
 
     @GetMapping("/me")
-    public Profile me(@AuthenticationPrincipal AuthUser me) {
+    public Object me(@AuthenticationPrincipal AuthUser me) {
         return service.get(me.id());
     }
 
     @PutMapping("/me")
-    public Profile save(@AuthenticationPrincipal AuthUser me, @Valid @RequestBody ProfileRequest r) {
+    public Object save(@AuthenticationPrincipal AuthUser me, @Valid @RequestBody ProfileRequest r) {
         return service.save(me.id(), r);
     }
 }

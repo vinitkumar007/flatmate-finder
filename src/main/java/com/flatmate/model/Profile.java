@@ -1,4 +1,4 @@
-Package com.flatmate.model;
+package com.flatmate.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -10,18 +10,17 @@ import lombok.Setter;
 @Table(name = "profiles")
 @Getter
 @Setter
-public class profile {
+class FlatmateProfile {
 
     @Id
     private Long userId;
 
     private String name;
-    private String age;
+    private int age;
     private String gender;
     private String occupation;
     private String phone;
     private String city;
     private String area;
-    private String budget;
-
+    private int budget;
 }

@@ -1,7 +1,7 @@
 package com.flatmate.repository;
 
-import com.flatmate.model.profile;
+import com.flatmate.model.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface profileRepository extends JpaRepository<Profile, Long> {
+public interface ProfileRepository extends JpaRepository<Profile, Long> {
 }
