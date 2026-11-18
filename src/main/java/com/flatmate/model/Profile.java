@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "profiles")
 @Getter
 @Setter
-class FlatmateProfile {
+public class Profile {
 
     @Id
     private Long userId;
