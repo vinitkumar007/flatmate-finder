@@ -75,3 +75,9 @@ async function api(method, path, body) {
   }
   return data;
 }
+$main.replaceChildren(
+  h('div', { class: 'card' },
+    h('h2', {}, 'JS chal rahi hai'),
+    btn('Toast dikhao', () => toast('Namaste!'))
+  )
+);
