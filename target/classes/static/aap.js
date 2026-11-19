@@ -34,3 +34,13 @@ function h(tag, attrs = {}, ...kids) {
   }
   return el;
 }
+const safe = fn => async (...args) => {
+  try {
+    await fn(...args);
+  } catch (e) {
+    toast(e.message, true);
+  }
+};
+
+const btn = (label, fn, cls = '') =>
+  h('button', { class: cls, type: 'button', onclick: safe(fn) }, label);
