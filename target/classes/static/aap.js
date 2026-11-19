@@ -44,3 +44,34 @@ const safe = fn => async (...args) => {
 
 const btn = (label, fn, cls = '') =>
   h('button', { class: cls, type: 'button', onclick: safe(fn) }, label);
+async function api(method, path, body) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (S.token) headers['Authorization'] = 'Bearer ' + S.token;
+
+  const res = await fetch(path, {
+    method,
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+
+  if (res.status === 401 && !path.startsWith('/api/auth/')) {
+    clearToken();
+    viewAuth('login');
+    throw new Error('Session expire ho gaya, dobara login karo');
+  }
+
+  const text = await res.text();
+  let data = null;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch (e) {
+    // jawab JSON nahi tha
+  }
+
+  if (!res.ok) {
+    const err = new Error((data && data.error) || 'Kuch gadbad ho gayi');
+    err.status = res.status;
+    throw err;
+  }
+  return data;
+}
