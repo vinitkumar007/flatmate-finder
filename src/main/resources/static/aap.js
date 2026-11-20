@@ -121,3 +121,11 @@ viewAuth('login');
     mode === 'verify' ? h('p', { class: 'muted' }, 'OTP abhi server ke terminal me dikhta hai.') : null,
     h('button', { type: 'submit' }, titles[mode])
   );
+    const links = h('p', { class: 'muted' },
+    mode !== 'login' ? btn('Login pe jao', () => viewAuth('login', emailIn.value), 'link') : null,
+    mode !== 'register' ? btn('Naya account', () => viewAuth('register', emailIn.value), 'link') : null,
+    mode !== 'verify' ? btn('OTP verify karna hai?', () => viewAuth('verify', emailIn.value), 'link') : null
+  );
+
+  $main.replaceChildren(form, links);
+}
