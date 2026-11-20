@@ -112,3 +112,12 @@ async function api(method, path, body) {
   return data;
 }
 viewAuth('login');
+  const form = h('form', { class: 'card', onsubmit: onSubmit },
+    h('h2', {}, titles[mode]),
+    h('label', {}, 'Email', emailIn),
+    mode !== 'verify' ? h('label', {}, 'Password', passIn) : null,
+    mode === 'register' ? h('p', { class: 'muted' }, 'Kam se kam 8 character: capital letter, small letter aur number zaroori hai.') : null,
+    mode === 'verify' ? h('label', {}, 'OTP', otpIn) : null,
+    mode === 'verify' ? h('p', { class: 'muted' }, 'OTP abhi server ke terminal me dikhta hai.') : null,
+    h('button', { type: 'submit' }, titles[mode])
+  );
