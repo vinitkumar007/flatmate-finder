@@ -129,3 +129,25 @@ viewAuth('login');
 
   $main.replaceChildren(form, links);
 }
+
+function setNav() {
+  $nav.replaceChildren(btn('Logout', logout, 'link'));
+}
+
+function logout() {
+  clearToken();
+  viewAuth('login');
+}
+
+function viewHome() {
+  setNav();
+  $main.replaceChildren(
+    h('div', { class: 'card' },
+      h('h2', {}, 'Login ho gaye'),
+      h('p', {}, 'Profile ka page agle step me banega.')
+    )
+  );
+}
+
+if (S.token) viewHome();
+else viewAuth('login');
