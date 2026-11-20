@@ -43,6 +43,32 @@ function viewAuth(mode = 'login', email = '') {
   const emailIn = h('input', { type: 'email', placeholder: 'Email', maxlength: '120', value: email });
   const passIn = h('input', { type: 'password', placeholder: 'Password', maxlength: '72' });
   const otpIn = h('input', { placeholder: '6 digit OTP', maxlength: '6', inputmode: 'numeric' });
+
+  const onSubmit = safe(async ev => {
+    ev.preventDefault();
+
+    if (mode === 'login') {
+      const d = await api('POST', '/api/auth/login', { email: emailIn.value, password: passIn.value });
+      saveToken(d.accessToken);
+      viewHome();
+    } else if (mode === 'register') {
+      const d = await api('POST', '/api/auth/register', { email: emailIn.value, password: passIn.value });
+      toast(d.message);
+      viewAuth('verify', emailIn.value);
+    } else {
+      const d = await api('POST', '/api/auth/verify', { email: emailIn.value, otp: otpIn.value });
+      toast(d.message);
+      viewAuth('login', emailIn.value);
+    }
+  });
+
+  const form = h('form', { onsubmit: onSubmit },
+    h('h2', {}, titles[mode]),
+    emailIn,
+    mode === 'verify' ? otpIn : passIn,
+    h('button', { type: 'submit' }, mode === 'verify' ? 'Verify' : mode === 'login' ? 'Login' : 'Register')
+  );
+  $main.replaceChildren(h('div', { class: 'card' }, form));
 }
 const safe = fn => async (...args) => {
   try {
@@ -85,9 +111,4 @@ async function api(method, path, body) {
   }
   return data;
 }
-$main.replaceChildren(
-  h('div', { class: 'card' },
-    h('h2', {}, 'JS chal rahi hai'),
-    btn('Toast dikhao', () => toast('Namaste!'))
-  )
-);
+viewAuth('login');
