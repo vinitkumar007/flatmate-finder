@@ -43,6 +43,7 @@ function viewAuth(mode = 'login', email = '') {
   const emailIn = h('input', { type: 'email', placeholder: 'Email', maxlength: '120', value: email });
   const passIn = h('input', { type: 'password', placeholder: 'Password', maxlength: '72' });
   const otpIn = h('input', { placeholder: '6 digit OTP', maxlength: '6', inputmode: 'numeric' });
+}
 const safe = fn => async (...args) => {
   try {
     await fn(...args);
