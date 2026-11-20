@@ -33,7 +33,16 @@ function h(tag, attrs = {}, ...kids) {
     if (kid != null && kid !== false) el.append(kid);
   }
   return el;
+
 }
+function viewAuth(mode = 'login', email = '') {
+  $nav.replaceChildren();
+
+  const titles = { login: 'Login', register: 'Naya account banao', verify: 'OTP verify karo' };
+
+  const emailIn = h('input', { type: 'email', placeholder: 'Email', maxlength: '120', value: email });
+  const passIn = h('input', { type: 'password', placeholder: 'Password', maxlength: '72' });
+  const otpIn = h('input', { placeholder: '6 digit OTP', maxlength: '6', inputmode: 'numeric' });
 const safe = fn => async (...args) => {
   try {
     await fn(...args);
