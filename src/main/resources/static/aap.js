@@ -148,7 +148,18 @@ function viewHome() {
     )
   );
 }
+async function viewProfile() {
+  setNav();
 
+  let p = {};
+  let first = false;
+  try {
+    p = await api('GET', '/api/profile/me');
+  } catch (e) {
+    if (e.status !== 404) throw e;
+    first = true;
+  }
+  p = { gender: 'MALE', ...p };
 if (S.token) viewHome();
 else viewAuth('login');
 const FIELDS = [
