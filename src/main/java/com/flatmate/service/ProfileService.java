@@ -21,8 +21,12 @@ public class ProfileService {
                 .orElseThrow(() -> new ApiException(404, "Profile abhi nahi bana"));
     }
 
-    @Transactional
+        @Transactional
     public Profile save(Long userId, ProfileRequest r) {
+        if (r.prefMinAge() > r.prefMaxAge()) {
+            throw new ApiException(400, "Min age, max age se zyada nahi ho sakti");
+        }
+
         Profile p = profiles.findById(userId).orElseGet(Profile::new);
 
         p.setUserId(userId);
@@ -35,6 +39,21 @@ public class ProfileService {
         p.setArea(r.area().trim().toLowerCase());
         p.setBudget(r.budget());
 
+        p.setSleepHour(r.sleepHour());
+        p.setWakeHour(r.wakeHour());
+        p.setCleanliness(r.cleanliness());
+        p.setSmoking(r.smoking());
+        p.setDrinking(r.drinking());
+        p.setVegetarian(r.vegetarian());
+
+        p.setPrefGender(r.prefGender());
+        p.setPrefMinAge(r.prefMinAge());
+        p.setPrefMaxAge(r.prefMaxAge());
+        p.setPrefSmokingOk(r.prefSmokingOk());
+        p.setPrefDrinkingOk(r.prefDrinkingOk());
+        p.setPrefVegOnly(r.prefVegOnly());
+        p.setVisible(r.visible());
+
         return profiles.save(p);
     }
-}
+    }

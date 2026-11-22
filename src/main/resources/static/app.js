@@ -146,6 +146,21 @@ const FIELDS = [
   ['city', 'City', 'text'],
   ['area', 'Area (jaise Marathahalli)', 'text'],
   ['budget', 'Monthly budget (Rs)', 'number'],
+  ['sleepHour', 'Sone ka time (0-23, jaise 23 = raat 11 baje, 2 = raat 2 baje)', 'number'],
+  ['wakeHour', 'Uthne ka time (0-23, jaise 7 = subah 7 baje)', 'number'],
+  ['cleanliness', 'Safai (1 = relaxed, 5 = bahut clean)', 'number'],
+  ['smoking', 'Main smoking karta/karti hoon', 'check'],
+  ['drinking', 'Main drinking karta/karti hoon', 'check'],
+  ['vegetarian', 'Main vegetarian hoon', 'check'],
+  ['', 'Mujhe kaisa flatmate chahiye?', 'heading'],
+  ['prefGender', 'Flatmate ka gender', 'select', ['ANY', 'MALE', 'FEMALE', 'OTHER']],
+  ['prefMinAge', 'Flatmate ki minimum age', 'number'],
+  ['prefMaxAge', 'Flatmate ki maximum age', 'number'],
+  ['prefSmokingOk', 'Smoker chalega', 'check'],
+  ['prefDrinkingOk', 'Drinker chalega', 'check'],
+  ['prefVegOnly', 'Sirf vegetarian chahiye', 'check'],
+  ['', 'Privacy', 'heading'],
+  ['visible', 'Mera profile dusron ko search me dikhe', 'check'],
 ];
 
 async function viewProfile() {
