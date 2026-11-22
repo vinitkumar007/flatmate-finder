@@ -184,3 +184,23 @@ const FIELDS = [
     inputs[key] = input;
     return h('label', {}, label, input);
   });
+    const form = h('form', {
+      class: 'card',
+      onsubmit: safe(async ev => {
+        ev.preventDefault();
+        const body = {};
+        for (const [key, , type] of FIELDS) {
+          const v = inputs[key].value.trim();
+          body[key] = type === 'number' ? Number(v) : v;
+        }
+        await api('PUT', '/api/profile/me', body);
+        toast('Profile save ho gaya');
+      }),
+    },
+    h('h2', {}, first ? 'Pehle apna profile banao' : 'Mera profile'),
+    rows,
+    h('button', { type: 'submit' }, 'Profile save karo')
+  );
+
+  $main.replaceChildren(form);
+}
