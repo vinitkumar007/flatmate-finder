@@ -15,6 +15,7 @@ function clearToken() {
   S.token = null;
   sessionStorage.removeItem('token');
 }
+
 function toast(msg, bad) {
   $toast.textContent = msg;
   $toast.className = bad ? 'bad' : 'ok';
@@ -33,43 +34,8 @@ function h(tag, attrs = {}, ...kids) {
     if (kid != null && kid !== false) el.append(kid);
   }
   return el;
-
 }
-function viewAuth(mode = 'login', email = '') {
-  $nav.replaceChildren();
 
-  const titles = { login: 'Login', register: 'Naya account banao', verify: 'OTP verify karo' };
-
-  const emailIn = h('input', { type: 'email', placeholder: 'Email', maxlength: '120', value: email });
-  const passIn = h('input', { type: 'password', placeholder: 'Password', maxlength: '72' });
-  const otpIn = h('input', { placeholder: '6 digit OTP', maxlength: '6', inputmode: 'numeric' });
-
-  const onSubmit = safe(async ev => {
-    ev.preventDefault();
-
-    if (mode === 'login') {
-      const d = await api('POST', '/api/auth/login', { email: emailIn.value, password: passIn.value });
-      saveToken(d.accessToken);
-      viewHome();
-    } else if (mode === 'register') {
-      const d = await api('POST', '/api/auth/register', { email: emailIn.value, password: passIn.value });
-      toast(d.message);
-      viewAuth('verify', emailIn.value);
-    } else {
-      const d = await api('POST', '/api/auth/verify', { email: emailIn.value, otp: otpIn.value });
-      toast(d.message);
-      viewAuth('login', emailIn.value);
-    }
-  });
-
-  const form = h('form', { onsubmit: onSubmit },
-    h('h2', {}, titles[mode]),
-    emailIn,
-    mode === 'verify' ? otpIn : passIn,
-    h('button', { type: 'submit' }, mode === 'verify' ? 'Verify' : mode === 'login' ? 'Login' : 'Register')
-  );
-  $main.replaceChildren(h('div', { class: 'card' }, form));
-}
 const safe = fn => async (...args) => {
   try {
     await fn(...args);
@@ -80,6 +46,7 @@ const safe = fn => async (...args) => {
 
 const btn = (label, fn, cls = '') =>
   h('button', { class: cls, type: 'button', onclick: safe(fn) }, label);
+
 async function api(method, path, body) {
   const headers = { 'Content-Type': 'application/json' };
   if (S.token) headers['Authorization'] = 'Bearer ' + S.token;
@@ -111,7 +78,34 @@ async function api(method, path, body) {
   }
   return data;
 }
-viewAuth('login');
+
+function viewAuth(mode = 'login', email = '') {
+  $nav.replaceChildren();
+
+  const titles = { login: 'Login', register: 'Naya account banao', verify: 'OTP verify karo' };
+
+  const emailIn = h('input', { type: 'email', placeholder: 'Email', maxlength: '120', value: email });
+  const passIn = h('input', { type: 'password', placeholder: 'Password', maxlength: '72' });
+  const otpIn = h('input', { placeholder: '6 digit OTP', maxlength: '6', inputmode: 'numeric' });
+
+  const onSubmit = safe(async ev => {
+    ev.preventDefault();
+
+    if (mode === 'login') {
+      const d = await api('POST', '/api/auth/login', { email: emailIn.value, password: passIn.value });
+      saveToken(d.accessToken);
+      viewHome();
+    } else if (mode === 'register') {
+      const d = await api('POST', '/api/auth/register', { email: emailIn.value, password: passIn.value });
+      toast(d.message);
+      viewAuth('verify', emailIn.value);
+    } else {
+      const d = await api('POST', '/api/auth/verify', { email: emailIn.value, otp: otpIn.value });
+      toast(d.message);
+      viewAuth('login', emailIn.value);
+    }
+  });
+
   const form = h('form', { class: 'card', onsubmit: onSubmit },
     h('h2', {}, titles[mode]),
     h('label', {}, 'Email', emailIn),
@@ -121,7 +115,8 @@ viewAuth('login');
     mode === 'verify' ? h('p', { class: 'muted' }, 'OTP abhi server ke terminal me dikhta hai.') : null,
     h('button', { type: 'submit' }, titles[mode])
   );
-    const links = h('p', { class: 'muted' },
+
+  const links = h('p', { class: 'muted' },
     mode !== 'login' ? btn('Login pe jao', () => viewAuth('login', emailIn.value), 'link') : null,
     mode !== 'register' ? btn('Naya account', () => viewAuth('register', emailIn.value), 'link') : null,
     mode !== 'verify' ? btn('OTP verify karna hai?', () => viewAuth('verify', emailIn.value), 'link') : null
@@ -131,7 +126,10 @@ viewAuth('login');
 }
 
 function setNav() {
-  $nav.replaceChildren(btn('Logout', logout, 'link'));
+  $nav.replaceChildren(
+    btn('Mera profile', viewProfile, 'link'),
+    btn('Logout', logout, 'link')
+  );
 }
 
 function logout() {
@@ -139,15 +137,17 @@ function logout() {
   viewAuth('login');
 }
 
-function viewHome() {
-  setNav();
-  $main.replaceChildren(
-    h('div', { class: 'card' },
-      h('h2', {}, 'Login ho gaye'),
-      h('p', {}, 'Profile ka page agle step me banega.')
-    )
-  );
-}
+const FIELDS = [
+  ['name', 'Naam', 'text'],
+  ['age', 'Age', 'number'],
+  ['gender', 'Gender', 'select', ['MALE', 'FEMALE', 'OTHER']],
+  ['occupation', 'Kaam (Job / Student)', 'text'],
+  ['phone', 'Phone number (dusron ko nahi dikhega)', 'text'],
+  ['city', 'City', 'text'],
+  ['area', 'Area (jaise Marathahalli)', 'text'],
+  ['budget', 'Monthly budget (Rs)', 'number'],
+];
+
 async function viewProfile() {
   setNav();
 
@@ -160,18 +160,7 @@ async function viewProfile() {
     first = true;
   }
   p = { gender: 'MALE', ...p };
-if (S.token) viewHome();
-else viewAuth('login');
-const FIELDS = [
-  ['name', 'Naam', 'text'],
-  ['age', 'Age', 'number'],
-  ['gender', 'Gender', 'select', ['MALE', 'FEMALE', 'OTHER']],
-  ['occupation', 'Kaam (Job / Student)', 'text'],
-  ['phone', 'Phone number (dusron ko nahi dikhega)', 'text'],
-  ['city', 'City', 'text'],
-  ['area', 'Area (jaise Marathahalli)', 'text'],
-  ['budget', 'Monthly budget (Rs)', 'number'],
-];
+
   const inputs = {};
   const rows = FIELDS.map(([key, label, type, options]) => {
     let input;
@@ -184,7 +173,8 @@ const FIELDS = [
     inputs[key] = input;
     return h('label', {}, label, input);
   });
-    const form = h('form', {
+
+  const form = h('form', {
       class: 'card',
       onsubmit: safe(async ev => {
         ev.preventDefault();
@@ -204,15 +194,10 @@ const FIELDS = [
 
   $main.replaceChildren(form);
 }
-function setNav() {
-  $nav.replaceChildren(
-    btn('Mera profile', viewProfile, 'link'),
-    btn('Logout', logout, 'link')
-  );
-}
 
 function viewHome() {
   safe(viewProfile)();
 }
+
 if (S.token) viewHome();
 else viewAuth('login');
