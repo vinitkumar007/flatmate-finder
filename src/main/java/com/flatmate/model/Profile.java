@@ -9,15 +9,15 @@ import lombok.Setter;
 @Entity
 @Table(name = "profiles")
 @Getter
-@Setter 
-public class profile {
+@Setter
+public class Profile {
 
-    @Id 
-    private Long UserId;
+    @Id
+    private Long userId;
 
     private String name;
-    private String gender;
     private int age;
+    private String gender;
     private String occupation;
     private String phone;
     private String city;
@@ -39,5 +39,4 @@ public class profile {
     private boolean prefVegOnly;
 
     private boolean visible = true;
-    
 }
