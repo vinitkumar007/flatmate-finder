@@ -172,3 +172,15 @@ const FIELDS = [
   ['area', 'Area (jaise Marathahalli)', 'text'],
   ['budget', 'Monthly budget (Rs)', 'number'],
 ];
+  const inputs = {};
+  const rows = FIELDS.map(([key, label, type, options]) => {
+    let input;
+    if (type === 'select') {
+      input = h('select', {}, options.map(o => h('option', { value: o }, o)));
+    } else {
+      input = h('input', { type, maxlength: '60' });
+    }
+    input.value = p[key] ?? '';
+    inputs[key] = input;
+    return h('label', {}, label, input);
+  });
