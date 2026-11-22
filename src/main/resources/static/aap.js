@@ -151,3 +151,13 @@ function viewHome() {
 
 if (S.token) viewHome();
 else viewAuth('login');
+const FIELDS = [
+  ['name', 'Naam', 'text'],
+  ['age', 'Age', 'number'],
+  ['gender', 'Gender', 'select', ['MALE', 'FEMALE', 'OTHER']],
+  ['occupation', 'Kaam (Job / Student)', 'text'],
+  ['phone', 'Phone number (dusron ko nahi dikhega)', 'text'],
+  ['city', 'City', 'text'],
+  ['area', 'Area (jaise Marathahalli)', 'text'],
+  ['budget', 'Monthly budget (Rs)', 'number'],
+];
