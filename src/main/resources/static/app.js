@@ -174,19 +174,32 @@ async function viewProfile() {
     if (e.status !== 404) throw e;
     first = true;
   }
-  p = { gender: 'MALE', ...p };
+  p = {
+    gender: 'MALE', sleepHour: 23, wakeHour: 7, cleanliness: 3,
+    prefGender: 'ANY', prefMinAge: 18, prefMaxAge: 60, visible: true,
+    ...p,
+  };
 
   const inputs = {};
   const rows = FIELDS.map(([key, label, type, options]) => {
+    if (type === 'heading') return h('h3', {}, label);
+
     let input;
     if (type === 'select') {
       input = h('select', {}, options.map(o => h('option', { value: o }, o)));
+    } else if (type === 'check') {
+      input = h('input', { type: 'checkbox' });
     } else {
       input = h('input', { type, maxlength: '60' });
     }
-    input.value = p[key] ?? '';
+
+    if (type === 'check') input.checked = !!p[key];
+    else input.value = p[key] ?? '';
+
     inputs[key] = input;
-    return h('label', {}, label, input);
+    return type === 'check'
+      ? h('label', { class: 'row' }, input, label)
+      : h('label', {}, label, input);
   });
 
   const form = h('form', {
@@ -195,8 +208,11 @@ async function viewProfile() {
         ev.preventDefault();
         const body = {};
         for (const [key, , type] of FIELDS) {
-          const v = inputs[key].value.trim();
-          body[key] = type === 'number' ? Number(v) : v;
+          if (type === 'heading') continue;
+          const el = inputs[key];
+          body[key] = type === 'check' ? el.checked
+            : type === 'number' ? Number(el.value)
+            : el.value.trim();
         }
         await api('PUT', '/api/profile/me', body);
         toast('Profile save ho gaya');
@@ -209,10 +225,24 @@ async function viewProfile() {
 
   $main.replaceChildren(form);
 }
-
+    
 function viewHome() {
   safe(viewProfile)();
 }
 
 if (S.token) viewHome();
-else viewAuth('login');
+else viewAuth('login');async function viewProfile() {
+  setNav();
+
+  let p = {};
+  let first = false;
+  try {
+    p = await api('GET', '/api/profile/me');
+  } catch (e) {
+    if (e.status !== 404) throw e;
+    first = true;
+  }
+  p = { gender: 'MALE', ...p };
+
+  const inputs = {};
+  const rows = 
