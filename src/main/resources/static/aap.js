@@ -204,3 +204,13 @@ const FIELDS = [
 
   $main.replaceChildren(form);
 }
+function setNav() {
+  $nav.replaceChildren(
+    btn('Mera profile', viewProfile, 'link'),
+    btn('Logout', logout, 'link')
+  );
+}
+
+function viewHome() {
+  safe(viewProfile)();
+}
