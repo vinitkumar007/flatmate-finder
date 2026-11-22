@@ -214,3 +214,5 @@ function setNav() {
 function viewHome() {
   safe(viewProfile)();
 }
+if (S.token) viewHome();
+else viewAuth('login');
