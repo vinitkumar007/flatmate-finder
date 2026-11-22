@@ -30,5 +30,32 @@ public record ProfileRequest(
         String area,
 
         @Min(1000) @Max(200000)
-        int budget
+        int budget,
+
+        @Min(0) @Max(23)
+        int sleepHour,
+
+        @Min(0) @Max(23)
+        int wakeHour,
+
+        @Min(1) @Max(5)
+        int cleanliness,
+
+        boolean smoking,
+        boolean drinking,
+        boolean vegetarian,
+
+        @NotBlank @Pattern(regexp = "ANY|MALE|FEMALE|OTHER")
+        String prefGender,
+
+        @Min(18) @Max(100)
+        int prefMinAge,
+
+        @Min(18) @Max(100)
+        int prefMaxAge,
+
+        boolean prefSmokingOk,
+        boolean prefDrinkingOk,
+        boolean prefVegOnly,
+        boolean visible
 ) {}
