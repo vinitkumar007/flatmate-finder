@@ -20,6 +20,30 @@ public class MatchService {
 
     public static int score(Profile a, Profile b) {
         double total = 0;
+            private static double closeness(int h1, int h2) {
+        int d = Math.abs(h1 - h2);
+        d = Math.min(d, 24 - d);
+        return Math.max(0, 1 - d / 6.0);
+    }
+
+    private static boolean same(String x, String y) {
+        return x != null && x.equalsIgnoreCase(y);
+    }
+
+    private static boolean compatible(Profile a, Profile b) {
+        return genderOk(a.getPrefGender(), b.getGender())
+                && genderOk(b.getPrefGender(), a.getGender())
+                && ageOk(a, b.getAge())
+                && ageOk(b, a.getAge());
+    }
+
+    private static boolean genderOk(String pref, String gender) {
+        return pref == null || "ANY".equals(pref) || pref.equals(gender);
+    }
+
+    private static boolean ageOk(Profile p, int age) {
+        return age >= p.getPrefMinAge() && age <= p.getPrefMaxAge();
+    }
 
         // 1) Location (25)
         if (same(a.getCity(), b.getCity())) {
