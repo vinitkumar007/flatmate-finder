@@ -73,4 +73,20 @@ public class MatchService {
         total += 15 * ok / 6.0;
 
         return (int) Math.round(total);
+            public List<Suggestion> suggestions(Long me) {
+        Profile mine = profiles.findById(me)
+                .orElseThrow(() -> new ApiException(400, "Pehle apna profile complete karo"));
+
+        List<Suggestion> out = new ArrayList<>();
+        for (Profile o : profiles.findCandidates(me, mine.getCity())) {
+            if (!compatible(mine, o)) continue;
+            out.add(new Suggestion(o.getUserId(), o.getName(), o.getAge(), o.getGender(),
+                    o.getOccupation(), o.getArea(), o.getBudget(), o.getSleepHour(),
+                    o.getWakeHour(), o.getCleanliness(), o.isSmoking(), o.isDrinking(),
+                    o.isVegetarian(), score(mine, o)));
+        }
+        out.sort((x, y) -> Integer.compare(y.score(), x.score()));
+        return out.size() > 50 ? out.subList(0, 50) : out;
+    }
+}
     }
