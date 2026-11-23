@@ -127,6 +127,7 @@ function viewAuth(mode = 'login', email = '') {
 
 function setNav() {
   $nav.replaceChildren(
+    btn('Suggestions', viewSuggestions, 'link'),
     btn('Mera profile', viewProfile, 'link'),
     btn('Logout', logout, 'link')
   );
