@@ -133,6 +133,10 @@ function setNav() {
   );
 }
 
+function viewHome() {
+  safe(viewSuggestions)();
+}
+
 function logout() {
   clearToken();
   viewAuth('login');
