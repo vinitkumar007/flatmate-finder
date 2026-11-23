@@ -201,6 +201,44 @@ async function viewProfile() {
       ? h('label', { class: 'row' }, input, label)
       : h('label', {}, label, input);
   });
+  function fmtHour(hr) {
+  return (hr % 12 || 12) + ':00 ' + (hr < 12 ? 'AM' : 'PM');
+}
+
+async function viewSuggestions() {
+  setNav();
+
+  let list;
+  try {
+    list = await api('GET', '/api/suggestions');
+  } catch (e) {
+    if (e.status === 400) {
+      toast(e.message, true);
+      return viewProfile();
+    }
+    throw e;
+  }
+
+  const head = h('h2', {}, 'Tumhare liye flatmates');
+  if (!list.length) {
+    $main.replaceChildren(head,
+      h('p', { class: 'card muted' }, 'Abhi koi match nahi mila. Profile me area, budget ya pasand thodi badal ke dekho.'));
+    return;
+  }
+
+  $main.replaceChildren(head, ...list.map(s =>
+    h('div', { class: 'card' },
+      h('span', { class: 'badge' }, s.score + '% match'),
+      h('h3', {}, s.name + ', ' + s.age),
+      h('p', {}, s.occupation + ' | ' + s.area + ' | Budget Rs ' + s.budget),
+      h('p', {}, 'Sota: ' + fmtHour(s.sleepHour) + ' | Uthta: ' + fmtHour(s.wakeHour) + ' | Safai: ' + s.cleanliness + '/5'),
+      h('div', { class: 'tags' },
+        h('span', {}, s.smoking ? 'Smoker' : 'Non-smoker'),
+        h('span', {}, s.drinking ? 'Drinks' : 'No drinking'),
+        h('span', {}, s.vegetarian ? 'Veg' : 'Non-veg'))
+    )
+  ));
+}
 
   const form = h('form', {
       class: 'card',
