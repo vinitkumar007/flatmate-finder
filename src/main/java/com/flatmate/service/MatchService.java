@@ -20,7 +20,38 @@ public class MatchService {
 
     public static int score(Profile a, Profile b) {
         double total = 0;
-            private static double closeness(int h1, int h2) {
+
+        // 1) Location (25)
+        if (same(a.getCity(), b.getCity())) {
+            total += same(a.getArea(), b.getArea()) ? 25 : 10;
+        }
+
+        // 2) Budget (25)
+        double ratio = Math.abs(a.getBudget() - b.getBudget())
+                / (double) Math.max(a.getBudget(), b.getBudget());
+        total += 25 * Math.max(0, 1 - 2 * ratio);
+
+        // 3) Sone aur uthne ka time (20)
+        total += 14 * closeness(a.getSleepHour(), b.getSleepHour());
+        total += 6 * closeness(a.getWakeHour(), b.getWakeHour());
+
+        // 4) Safai (15)
+        total += 15 * (1 - Math.abs(a.getCleanliness() - b.getCleanliness()) / 4.0);
+
+        // 5) Habits (15)
+        int ok = 0;
+        if (a.isPrefSmokingOk() || !b.isSmoking()) ok++;
+        if (b.isPrefSmokingOk() || !a.isSmoking()) ok++;
+        if (a.isPrefDrinkingOk() || !b.isDrinking()) ok++;
+        if (b.isPrefDrinkingOk() || !a.isDrinking()) ok++;
+        if (!a.isPrefVegOnly() || b.isVegetarian()) ok++;
+        if (!b.isPrefVegOnly() || a.isVegetarian()) ok++;
+        total += 15 * ok / 6.0;
+
+        return (int) Math.round(total);
+    }
+
+    private static double closeness(int h1, int h2) {
         int d = Math.abs(h1 - h2);
         d = Math.min(d, 24 - d);
         return Math.max(0, 1 - d / 6.0);
@@ -45,35 +76,7 @@ public class MatchService {
         return age >= p.getPrefMinAge() && age <= p.getPrefMaxAge();
     }
 
-        // 1) Location (25)
-        if (same(a.getCity(), b.getCity())) {
-            total += same(a.getArea(), b.getArea()) ? 25 : 10;
-        }
-
-        // 2) Budget (25)
-        double ratio = Math.abs(a.getBudget() - b.getBudget())
-                / (double) Math.max(a.getBudget(), b.getBudget());
-        total += 25 * Math.max(0, 1 - 2 * ratio);
-
-        // 3) Sone aur uthne ka time (20)
-        total += 14 * closeness(a.getSleepHour(), b.getSleepHour());
-        total += 6 * closeness(a.getWakeHour(), b.getWakeHour());
-
-        // 4) Safai (15)
-        total += 15 * (1 - Math.abs(a.getCleanliness() - b.getCleanliness()) / 4.0);
-
-        // 5) Habits (15): 6 jaanch, dono taraf se
-        int ok = 0;
-        if (a.isPrefSmokingOk() || !b.isSmoking()) ok++;
-        if (b.isPrefSmokingOk() || !a.isSmoking()) ok++;
-        if (a.isPrefDrinkingOk() || !b.isDrinking()) ok++;
-        if (b.isPrefDrinkingOk() || !a.isDrinking()) ok++;
-        if (!a.isPrefVegOnly() || b.isVegetarian()) ok++;
-        if (!b.isPrefVegOnly() || a.isVegetarian()) ok++;
-        total += 15 * ok / 6.0;
-
-        return (int) Math.round(total);
-            public List<Suggestion> suggestions(Long me) {
+    public List<Suggestion> suggestions(Long me) {
         Profile mine = profiles.findById(me)
                 .orElseThrow(() -> new ApiException(400, "Pehle apna profile complete karo"));
 
@@ -89,4 +92,3 @@ public class MatchService {
         return out.size() > 50 ? out.subList(0, 50) : out;
     }
 }
-    }
