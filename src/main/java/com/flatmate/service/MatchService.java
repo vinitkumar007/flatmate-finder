@@ -17,10 +17,12 @@ import java.util.List;
 @Service
 public class MatchService {
 
-    private final ProfileRepository profiles;
+        private final ProfileRepository profiles;
+    private final MatchRequestRepository requests;
 
-    public MatchService(ProfileRepository profiles) {
+    public MatchService(ProfileRepository profiles, MatchRequestRepository requests) {
         this.profiles = profiles;
+        this.requests = requests;
     }
 
     public static int score(Profile a, Profile b) {
