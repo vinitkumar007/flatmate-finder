@@ -55,3 +55,28 @@ public class RequestService {
         r.setReceiverId(receiverId);
         requests.save(r);
     }
+        public List<RequestView> incoming(Long me) {
+        Optional<Profile> mine = profiles.findById(me);
+        List<RequestView> out = new ArrayList<>();
+
+        for (MatchRequest r : requests.findByReceiverIdAndStatus(me, "PENDING")) {
+            profiles.findById(r.getSenderId()).ifPresent(p -> out.add(new RequestView(
+                    r.getId(), p.getUserId(), p.getName(), p.getAge(), p.getArea(), p.getBudget(),
+                    mine.map(m -> MatchService.score(m, p)).orElse(0))));
+        }
+        return out;
+    }
+
+    @Transactional
+    public void respond(Long me, Long requestId, boolean accept) {
+        MatchRequest r = requests.findById(requestId)
+                .orElseThrow(() -> new ApiException(404, "Request nahi mili"));
+
+        if (!r.getReceiverId().equals(me)) {
+            throw new ApiException(404, "Request nahi mili");
+        }
+        if (!"PENDING".equals(r.getStatus())) {
+            throw new ApiException(409, "Is request pe pehle hi jawab ho chuka hai");
+        }
+        r.setStatus(accept ? "ACCEPTED" : "REJECTED");
+    }
