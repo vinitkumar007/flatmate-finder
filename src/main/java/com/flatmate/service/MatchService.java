@@ -103,3 +103,4 @@ public class MatchService {
         out.sort((x, y) -> Integer.compare(y.score(), x.score()));
         return out.size() > 50 ? out.subList(0, 50) : out;
     }
+}
