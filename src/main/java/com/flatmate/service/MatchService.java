@@ -5,6 +5,11 @@ import com.flatmate.exception.ApiException;
 import com.flatmate.model.Profile;
 import com.flatmate.repository.ProfileRepository;
 import org.springframework.stereotype.Service;
+import com.flatmate.model.MatchRequest;
+import com.flatmate.repository.MatchRequestRepository;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import java.util.ArrayList;
 import java.util.List;
