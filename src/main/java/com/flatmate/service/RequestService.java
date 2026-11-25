@@ -80,3 +80,14 @@ public class RequestService {
         }
         r.setStatus(accept ? "ACCEPTED" : "REJECTED");
     }
+        public List<Connection> connections(Long me) {
+        List<Connection> out = new ArrayList<>();
+
+        for (MatchRequest r : requests.findAccepted(me)) {
+            Long other = r.getSenderId().equals(me) ? r.getReceiverId() : r.getSenderId();
+            profiles.findById(other).ifPresent(p ->
+                    out.add(new Connection(other, p.getName(), p.getPhone(), p.getArea())));
+        }
+        return out;
+    }
+}
