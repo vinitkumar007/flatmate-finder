@@ -128,6 +128,8 @@ function viewAuth(mode = 'login', email = '') {
 function setNav() {
   $nav.replaceChildren(
     btn('Suggestions', viewSuggestions, 'link'),
+    btn('Requests', viewRequests, 'link'),
+    btn('Connections', viewConnections, 'link'),
     btn('Mera profile', viewProfile, 'link'),
     btn('Logout', logout, 'link')
   );
@@ -252,8 +254,8 @@ async function viewSuggestions() {
     return;
   }
 
-  $main.replaceChildren(head, ...list.map(s =>
-    h('div', { class: 'card' },
+  $main.replaceChildren(head, ...list.map(s => {
+    const card = h('div', { class: 'card' },
       h('span', { class: 'badge' }, s.score + '% match'),
       h('h3', {}, s.name + ', ' + s.age),
       h('p', {}, s.occupation + ' | ' + s.area + ' | Budget Rs ' + s.budget),
@@ -261,7 +263,64 @@ async function viewSuggestions() {
       h('div', { class: 'tags' },
         h('span', {}, s.smoking ? 'Smoker' : 'Non-smoker'),
         h('span', {}, s.drinking ? 'Drinks' : 'No drinking'),
-        h('span', {}, s.vegetarian ? 'Veg' : 'Non-veg'))
+        h('span', {}, s.vegetarian ? 'Veg' : 'Non-veg')),
+      btn('Request bhejo', async () => {
+        const d = await api('POST', '/api/requests/send/' + s.userId);
+        toast(d.message);
+        card.remove();
+      })
+    );
+    return card;
+  }));
+}
+
+async function viewRequests() {
+  setNav();
+
+  const list = await api('GET', '/api/requests/incoming');
+  const head = h('h2', {}, 'Aayi hui requests');
+
+  if (!list.length) {
+    $main.replaceChildren(head, h('p', { class: 'card muted' }, 'Abhi koi nayi request nahi hai.'));
+    return;
+  }
+
+  $main.replaceChildren(head, ...list.map(r => {
+    const card = h('div', { class: 'card' },
+      h('span', { class: 'badge' }, r.score + '% match'),
+      h('h3', {}, r.name + ', ' + r.age),
+      h('p', {}, r.area + ' | Budget Rs ' + r.budget),
+      btn('Accept', async () => {
+        const d = await api('POST', '/api/requests/' + r.id + '/accept');
+        toast(d.message);
+        card.remove();
+      }),
+      btn('Reject', async () => {
+        const d = await api('POST', '/api/requests/' + r.id + '/reject');
+        toast(d.message);
+        card.remove();
+      }, 'danger')
+    );
+    return card;
+  }));
+}
+
+async function viewConnections() {
+  setNav();
+
+  const list = await api('GET', '/api/connections');
+  const head = h('h2', {}, 'Tumhare connections');
+
+  if (!list.length) {
+    $main.replaceChildren(head, h('p', { class: 'card muted' }, 'Abhi koi connection nahi. Request accept hone ke baad yahan dikhega.'));
+    return;
+  }
+
+  $main.replaceChildren(head, ...list.map(c =>
+    h('div', { class: 'card' },
+      h('h3', {}, c.name),
+      h('p', {}, 'Area: ' + c.area),
+      h('p', {}, 'Phone: ' + c.phone)
     )
   ));
 }
