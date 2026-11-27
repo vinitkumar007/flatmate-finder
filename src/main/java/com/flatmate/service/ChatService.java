@@ -38,3 +38,22 @@ public class ChatService {
 
         return new MessageView(m.getId(), true, m.getBody(), m.getCreatedAt());
     }
+        public List<MessageView> conversation(Long me, Long other) {
+        requireConnected(me, other);
+
+        List<Message> latest = new ArrayList<>(messages.conversation(me, other, PageRequest.of(0, 100)));
+        Collections.reverse(latest);
+
+        List<MessageView> out = new ArrayList<>();
+        for (Message m : latest) {
+            out.add(new MessageView(m.getId(), m.getSenderId().equals(me), m.getBody(), m.getCreatedAt()));
+        }
+        return out;
+    }
+
+    private void requireConnected(Long me, Long other) {
+        if (!requests.areConnected(me, other)) {
+            throw new ApiException(403, "Chat sirf accepted connection ke saath ho sakti hai");
+        }
+    }
+}
