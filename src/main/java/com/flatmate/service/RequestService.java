@@ -90,4 +90,8 @@ public class RequestService {
         }
         return out;
     }
+       public boolean areConnected(Long a, Long b) {
+        return requests.between(a, b).stream()
+                .anyMatch(r -> "ACCEPTED".equals(r.getStatus()));
+    } 
 }
