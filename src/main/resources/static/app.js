@@ -1,6 +1,7 @@
 'use strict';
 
 const S = { token: sessionStorage.getItem('token') };
+let chatTimer = null;
 
 const $main = document.getElementById('main');
 const $nav = document.getElementById('nav');
@@ -14,6 +15,11 @@ function saveToken(t) {
 function clearToken() {
   S.token = null;
   sessionStorage.removeItem('token');
+}
+
+function stopChat() {
+  clearInterval(chatTimer);
+  chatTimer = null;
 }
 
 function toast(msg, bad) {
@@ -80,6 +86,7 @@ async function api(method, path, body) {
 }
 
 function viewAuth(mode = 'login', email = '') {
+  stopChat();
   $nav.replaceChildren();
 
   const titles = { login: 'Login', register: 'Naya account banao', verify: 'OTP verify karo' };
@@ -126,6 +133,7 @@ function viewAuth(mode = 'login', email = '') {
 }
 
 function setNav() {
+  stopChat();
   $nav.replaceChildren(
     btn('Suggestions', viewSuggestions, 'link'),
     btn('Requests', viewRequests, 'link'),
@@ -320,9 +328,48 @@ async function viewConnections() {
     h('div', { class: 'card' },
       h('h3', {}, c.name),
       h('p', {}, 'Area: ' + c.area),
-      h('p', {}, 'Phone: ' + c.phone)
+      h('p', {}, 'Phone: ' + c.phone),
+      btn('Chat karo', () => viewChat(c.userId, c.name))
     )
   ));
+}
+
+async function viewChat(userId, name) {
+  setNav();
+
+  const box = h('div', { class: 'chat-box' });
+  const input = h('input', { maxlength: '500', placeholder: 'Message likho...' });
+
+  async function load() {
+    const msgs = await api('GET', '/api/chat/' + userId);
+    box.replaceChildren(...msgs.map(m =>
+      h('div', { class: 'msg' + (m.fromMe ? ' me' : '') }, m.text)));
+    box.scrollTop = box.scrollHeight;
+  }
+
+  const form = h('form', {
+      class: 'chat-form',
+      onsubmit: safe(async ev => {
+        ev.preventDefault();
+        if (!input.value.trim()) return;
+        await api('POST', '/api/chat/' + userId, { text: input.value });
+        input.value = '';
+        await load();
+      }),
+    },
+    input,
+    h('button', { type: 'submit' }, 'Bhejo')
+  );
+
+  $main.replaceChildren(
+    h('h2', {}, 'Chat: ' + name),
+    box,
+    form,
+    btn('Wapas', viewConnections, 'link')
+  );
+
+  await load();
+  chatTimer = setInterval(() => { load().catch(stopChat); }, 4000);
 }
 
 function viewHome() {
